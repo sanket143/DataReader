@@ -7,14 +7,14 @@ reserved = [
 data = {
   "WhatsApp": [
     {
-      _accessCount: 32,
-      _timeElapsed: "10",
+      "accessCount": 32,
+      "timeElapsed": "10",
     },
   ]
 }
+
 with open("data/AUM_V4_Usage_2018-11-13_19-27-59.csv", "rb") as csvfile:
   reader = csv.reader(csvfile, delimiter=",", quotechar="|")
-  data = {};
   for row in reader:
     try:
       if str(row[2]) not in reserved:
@@ -22,7 +22,17 @@ with open("data/AUM_V4_Usage_2018-11-13_19-27-59.csv", "rb") as csvfile:
         _app = row[0].replace("\"", "");
         _timeElapsed = row[1].replace("\"", "");
         
-        print _app, _accessCount, _timeElapsed;
+        # App data object;
+        _appData = {
+          "accessCount": _accessCount,
+          "timeElapsed": _timeElapsed
+        };
+
+        try:
+          data[_app].append(_appData);
+        except KeyError:
+          data[_app] = [_appData];
+
       else:
         print("Hello");
 
@@ -30,3 +40,6 @@ with open("data/AUM_V4_Usage_2018-11-13_19-27-59.csv", "rb") as csvfile:
       pass;
     except ValueError:
       pass;
+
+for app in data:
+  print app, data[app]
