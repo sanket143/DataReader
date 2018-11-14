@@ -10,12 +10,39 @@ fileList = filter(lambda fl: fl != '' and fl.split(".")[-1] == "csv", fileList);
 for fileName in fileList:
   with open("data/UsageHistory/" + fileName, "rb") as csvfile:
     reader = csv.reader(csvfile, delimiter=",", quotechar="|")
+    reader = list(reader)[::-1]
+
+    blanks = 0;
+    push = False;
+    _datetime = [];
+
+    for row in reader:
+      if push:
+        _datetime.append(row);
+
+      if row == ['""']:
+        push = True;
+        blanks += 1;
+
+      if blanks == 2:
+        break;
+
+    # Delete useless data
+    del _datetime[-1];
+    del _datetime[-1];
+
+    print("----"); # Separator
+
+    # Prints ontime on respective date
+    for i in _datetime:
+      print(i);
+
     for row in reader:
       try:
         _accessCount = int(row[2].replace("\"", ""));
         _app = row[0].replace("\"", "");
         _timeElapsed = row[1].replace("\"", "");
-        
+
         # App data object;
         _appData = {
           "accessCount": _accessCount,
@@ -32,7 +59,9 @@ for fileName in fileList:
       except ValueError:
         pass;
 
+"""
 for app in data:
   print(app);
   for i in data[app]:
     print i
+"""
