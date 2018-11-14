@@ -1,5 +1,7 @@
 # Data Reader
 data
+data/_cache
+*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
