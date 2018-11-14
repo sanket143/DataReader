@@ -59,9 +59,25 @@ for fileName in fileList:
       except ValueError:
         pass;
 
-"""
 for app in data:
+  totalTime = [0, 0, 0];
   print(app);
   for i in data[app]:
-    print i
-"""
+    time = i["timeElapsed"];
+    time = time.split(":");
+    try:
+      totalTime[0] += int(time[0]);
+      totalTime[1] += int(time[1]);
+      totalTime[2] += int(time[2]);
+    except:
+      pass;
+
+    print(i);
+
+  totalTime[1] += int(totalTime[2] / 60);
+  totalTime[2] = int(totalTime[2] % 60);
+  totalTime[0] += int(totalTime[1] / 60);
+  totalTime[1] = int(totalTime[1] % 60);
+
+  totalTime = [str(x) for x in totalTime];
+  print(":".join(totalTime));
