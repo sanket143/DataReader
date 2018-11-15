@@ -76,7 +76,7 @@ for app in data:
 sortedAppAverageData = sorted(appAverageData, key=lambda k: k['totalAverageAccessCount']) 
 
 for data in sortedAppAverageData:
-  print(data);
+  print data["App"] + "," + str(data["totalAverageAccessCount"]);
 
 """
 for app in data:
