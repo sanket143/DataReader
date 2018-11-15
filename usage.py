@@ -1,4 +1,5 @@
 import subprocess
+import operator
 import csv
 
 data = {}
@@ -31,11 +32,9 @@ for fileName in fileList:
     del _datetime[-1];
     del _datetime[-1];
 
-    print("----"); # Separator
-
     # Prints ontime on respective date
-    for i in _datetime:
-      print(i);
+    # for i in _datetime:
+    #   print(i);
 
     for row in reader:
       try:
@@ -46,6 +45,7 @@ for fileName in fileList:
         # App data object;
         _appData = {
           "accessCount": _accessCount,
+          "averageAccessCount": float(_accessCount) / len(_datetime),
           "timeElapsed": _timeElapsed
         };
 
@@ -59,20 +59,49 @@ for fileName in fileList:
       except ValueError:
         pass;
 
+appAverageData = [];
+
+for app in data:
+  totalAccessCount = 0;
+  for appData in data[app]:
+    totalAccessCount += appData["averageAccessCount"];
+
+  _tempAppData = {
+    "App": app,
+    "totalAverageAccessCount": totalAccessCount / len(data[app])
+  }
+
+  appAverageData.append(_tempAppData);
+
+sortedAppAverageData = sorted(appAverageData, key=lambda k: k['totalAverageAccessCount']) 
+
+for data in sortedAppAverageData:
+  print(data);
+
+"""
 for app in data:
   totalTime = [0, 0, 0];
-  print(app);
+  totalAccessCount = 0;
+  info = {};
+
   for i in data[app]:
     time = i["timeElapsed"];
     time = time.split(":");
+
+    try:
+      info[i["timeElapsed"]] += i["accessCount"];
+    except:
+      info[i["timeElapsed"]] = i["accessCount"];
+
     try:
       totalTime[0] += int(time[0]);
       totalTime[1] += int(time[1]);
       totalTime[2] += int(time[2]);
+
+      totalAccessCount += i["accessCount"];
     except:
       pass;
 
-    print(i);
 
   totalTime[1] += int(totalTime[2] / 60);
   totalTime[2] = int(totalTime[2] % 60);
@@ -80,4 +109,7 @@ for app in data:
   totalTime[1] = int(totalTime[1] % 60);
 
   totalTime = [str(x) for x in totalTime];
-  print(":".join(totalTime));
+  print totalAccessCount, app, ":".join(totalTime);
+  for time in info:
+    print time, info[time];
+"""
