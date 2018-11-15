@@ -1,7 +1,6 @@
 import subprocess
 import csv
 
-data = {}
 _dir = "data/ActivityHistory";
 
 apps = [
@@ -33,6 +32,7 @@ for fileName in fileList:
         appDate = updatedRow[1];
         appTime = updatedRow[2];
         appDuration = updatedRow[3];
+
 
         if appName in apps:
 
@@ -77,8 +77,3 @@ for fileName in fileList:
         pass;
 
   print("---------------------------------------------------------------------------------");
-
-for app in data:
-  print(app);
-  for i in data[app]:
-    print i
