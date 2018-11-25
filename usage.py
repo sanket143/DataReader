@@ -2,7 +2,15 @@ import subprocess
 import operator
 import csv
 
-data = {}
+def toHours(duration):
+  duration = duration.split(":");
+  duration = duration[0] + "." + str(int(duration[1]) * 100 / 60);
+  return float(duration);
+
+apps = ["UnFollow","Psych!","VidMate","Steam","Feedback","Clash of Clans","WhatsApp","TubeMate","TTT","StorySaver","Follower Analyzer","LIKE","Messenger Lite","Udemy","Conversations Legacy","Voot","HaikuJAM","SonyLIV","WeChat","QuizUp","Followers - Unfollowers","Slack","WhatsApp Stickers","Unfollowers","Social","Gitter","Duo","ZEE5","StarMaker","hike","Skype Lite","2ndLine","Mail","Yellow pages","Docs","instabig repost big photo","Messaging","Google","Discord","Call management","Quora","Instagram","Prime Video","BookMyShow","Gmail","Helo","Bitmoji","Bitmoji","Hotstar","InCallUI","Phone","YourQuote","Snapchat","E-mail","Psiphon Pro","Messages","Amazon Shopping","Personal stickers for WhatsApp","qmiran","Phone service","YouTube","Unfollow Pro for Instagram","Fake Call","Messenger","Email","Facebook","Google+","WhatsApp Sticker","MediaSaver","Neutrino+","Contacts","Lite","TikTok","Pinterest","TED","ExpertOption","Diwali Stickers","Instant DP Downloader","Telegram","Twitter","Badoo","HashTags","LinkedIn","Netflix","DAWebmail","Medium","Tinder"]
+
+
+data = [];
 
 fileList = subprocess.Popen("ls data/UsageHistory", shell=True, stdout=subprocess.PIPE).stdout.read()
 fileList = fileList.split("\n");
@@ -35,6 +43,7 @@ for fileName in fileList:
     # Prints ontime on respective date
     # for i in _datetime:
     #   print(i);
+    totalTimeElapsed = 0;
 
     for row in reader:
       try:
@@ -42,42 +51,27 @@ for fileName in fileList:
         _app = row[0].replace("\"", "");
         _timeElapsed = row[1].replace("\"", "");
 
-        # App data object;
-        _appData = {
-          "accessCount": _accessCount,
-          "averageAccessCount": float(_accessCount) / len(_datetime),
-          "timeElapsed": _timeElapsed
-        };
 
-        try:
-          data[_app].append(_appData);
-        except KeyError:
-          data[_app] = [_appData];
+        totalTimeElapsed += toHours(_timeElapsed);
+
+        _userData = {
+          "averageSocialMediaUsage": totalTimeElapsed / len(_datetime)
+        }
 
       except IndexError:
         pass;
       except ValueError:
         pass;
 
-appAverageData = [];
+    data.append(_userData);
 
-for app in data:
-  totalAccessCount = 0;
-  for appData in data[app]:
-    totalAccessCount += appData["averageAccessCount"];
+index = 0;
+userDataUsageHours = 0;
+for userData in data:
+  index += 1;
+  userDataUsageHours += userData["averageSocialMediaUsage"];
 
-  _tempAppData = {
-    "App": app,
-    "totalAverageAccessCount": totalAccessCount / len(data[app])
-  }
-
-  appAverageData.append(_tempAppData);
-
-sortedAppAverageData = sorted(appAverageData, key=lambda k: k['totalAverageAccessCount']) 
-
-for data in sortedAppAverageData:
-  print data["App"] + "," + str(data["totalAverageAccessCount"]);
-
+print userDataUsageHours / index;
 """
 for app in data:
   totalTime = [0, 0, 0];
